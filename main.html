@@ -1,0 +1,186 @@
+<html>
+	<!-- 
+		Main HTML page 
+
+		This is the main HTML user interface.  This file by itself will
+		be capabile of maintaing an offline ToDo list.  Once connected
+		to the internet, it will be capable of syncing its local list
+		with the server through AJAX calls.
+
+		The local database will consist of a JSON string.
+	-->
+	<head>
+		<style type="text/css">
+		</style>
+
+		<script type="text/javascript">
+function body_ready(){
+	static_bind_events();
+	dynamic_bind_evnets();
+	update_list();
+}
+
+// Binds call-back functions to static elements
+function static_bind_events(){
+	// Find the add-item textbox and add the onkeypress event
+	document.getElementById("add_text").onkeypress = add_item();
+
+	// Find the add-item button and add the onclick event
+	document.getElementById("add_button").onclick = add_item();
+}
+
+function dynamic_bind_evnets(){
+	// Get a list of Input Elements
+	var inputs = document.getElementsByTag("input");
+	for(var i = 0; i<inputs.length;i++){
+		// If not a checkbox, skip to the next
+		if(inputs[i].getAttribute("type")=="checkbox"){
+			//Add Listener with callback function (Toggle_status)
+			inputs[i].onclick = toggle_status();
+		}
+	}
+
+	// Get a list of all delete buttons
+	var buttons = document.getElementByTagName("button");
+	for(var i = 0; i<buttons.length;i++){
+		// Check if its a delete button
+		if(inputs[i].className == "delete"){ // TODO look for substring
+			// Add listener with callback function delete_item
+			inputs[i].onclick = delete_item();
+		}
+
+		// Check if a category menu was clicked
+		if(inputs[i].className == "cat_menu_button"){ 
+			// TODO look for substr
+			// Add callback function open_cat_menu
+			inputs[i].onclick = open_cat_menu();
+		}
+	}
+}
+
+
+function add_item(){
+	var obj = getElementById("add_text");
+	var new_name = obj.value;
+
+	// Add new_name to JSON list
+
+	// Redraw the list
+	update_list();
+}
+
+function toggle_status(){
+	// Get Current Item
+	// Find it's parents ID
+	// Modify the JSON object so that the item's status is toggled
+	//		1 ==> 0   or 0 ==> 1
+	update_list();
+}
+
+function delete_item(){
+	// Get Current item
+	// Find its parent's ID
+	// Modify the JSON object so that the item is marked as deleted
+	//		Status set to 2
+	//		There will not be an un-delete option
+	update_list();
+}
+
+// Draws a list of available categories
+//  The first item on the list will be an 'X'.  This will close the menu
+//  The 2nd to (n-1)th item on the list will display the available categories
+//  The nth item onthe list will alwasy be a "+".  The will add a new category
+function open_cat_menu(e){
+	// First, delete all existing Category menus
+	// TODO Put this into its own function
+	var divs = getElementsByTagName("div");
+	for(var i = 0; i<divs.length; i++){
+		if(divs[i].className == "cat_menu_div"){
+			// Delete Object from the DOM
+			// TODO Another option would be to show/hid the menus
+		}	
+	}
+
+	// Create a new DOM element
+	var menu = document.createElement("div");
+	e.target.appendChild(menu);
+	menu.className = "cat_menu_div";
+	// Add the X item
+	var x_button = document.createElement("button");
+	x_button.className = "cat_button";
+	x_button.text = "X";
+	menu.appendChild(x_button);
+	// Add each Category
+	for(var i = 0; i<db.length; i++){
+		var cat_name = db[i]["name"];
+		var cat_button = document.createElement("button");
+		cat_button.className = "cat_button";
+		cat_button.text = cat_name;
+		menu.appendChild(cat_button);
+	}
+
+	// Add New Cat button
+	var new_button = document.createElement("button");
+	new_button.className = "cat_button";
+	new_button.text = "+";
+	menu.appendChild(new_button);
+
+
+}
+
+// 'Redraws' the ToDo list HTML
+function update_list(){
+	// Scan through the JSON object
+	// Conver the JSON data into HTML
+	// TODO Look into Templates... it might be easier that way
+
+}
+
+		</script>
+	</head>
+
+	<body onload="body_ready()">
+		<div id="top">
+			<!--
+		       	The top section will have a text box for inserting new 
+			items to the list.	
+		       	-->
+			<input id="add_text" type="text" value="Add new item..." />
+			<button id="add_button">+</button>
+		</div>
+
+
+		<div id="main">
+			<!--
+			The main section will display the todo list.
+
+			-->
+			<!-- Example Items -->
+			<div class="category cat1">
+				<div class="category_name cat1">
+					Dry Food
+				</div>
+				<div class="item cat1" id="1234asdf">
+					<input type="checkbox" />
+					<div class="item_name">
+						Bread
+					</div>
+				</div>
+				<div class="item cat1 done" id="4321fdsa">
+					<input type="checkbox" />
+					<div class="item_name">
+						Milk
+					</div>		
+				</div>
+			</div>
+		</div>
+
+		<!--
+		The bottom section will be used for printing log and debugging 
+		info
+		-->
+		<div id="bottom">
+
+		</div>
+	</body>
+</html>
