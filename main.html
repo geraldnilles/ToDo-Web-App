@@ -58,6 +58,37 @@
 
 <script type="text/javascript">
 
+function ready(){
+	bind_events();	
+}
+
+function bind_events(){
+	var buttons = document.getElementsByTagName("button");
+	for(var i=0; i<buttons.length; i++){
+		var b = buttons[i];		
+		var cls = b.getAttribute("class");
+		if(cls=="add_category"){
+			b.onclick = add_category;
+		}else if(cls=="delete_item"){
+			b.onclick = delete_item;
+		}else if(cls=="delete_category"){
+			b.onclick = delete_category;
+		}else if(cls=="add_item"){
+			b.onclick = add_item;
+		}
+	}
+
+	var inputs = document.getElementsByTagName("input");
+	for(var x=0; x<inputs.length; x++){
+		var i = inputs[x];
+		if(i.getAttribute("type")=="checkbox"){
+			i.onclick=check_box;
+		}else if(i.getAttribute("type")=="input"){
+			i.onkeypress=submit;
+		}
+	}
+}
+
 
 </script>
 
